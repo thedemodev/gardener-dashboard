@@ -58,11 +58,19 @@ describe('cache', function () {
   }
   Project.scope = 'Cluster'
 
+  class ControllerRegistration {
+    syncList (store) {
+      return replace(store, [a, c])
+    }
+  }
+  ControllerRegistration.scope = 'Cluster'
+
   const gardenerCore = {
     cloudprofiles: new CloudProfile(),
     quotas: new Quota(),
     seeds: new Seed(),
-    projects: new Project()
+    projects: new Project(),
+    controllerregistrations: new ControllerRegistration()
   }
 
   const testClient = {
@@ -103,6 +111,12 @@ describe('cache', function () {
     expect(stub).to.be.calledOnce
   })
 
+  it('should dispatch "getControllerRegistrations" to internal cache', function () {
+    const stub = sandbox.stub(internalCache, 'getControllerRegistrations').returns(list)
+    expect(cache.getControllerRegistrations()).to.equal(list)
+    expect(stub).to.be.calledOnce
+  })
+
   describe('Cache', function () {
     const Cache = internalCache.constructor
     let cache
@@ -116,12 +130,14 @@ describe('cache', function () {
       let syncQuotasSpy
       let syncSeedsSpy
       let syncProjectsSpy
+      let syncControllerregistrationsSpy
 
       beforeEach(function () {
         syncCloudprofilesSpy = sandbox.spy(gardenerCore.cloudprofiles, 'syncList')
         syncQuotasSpy = sandbox.spy(gardenerCore.quotas, 'syncListAllNamespaces')
         syncSeedsSpy = sandbox.spy(gardenerCore.seeds, 'syncList')
         syncProjectsSpy = sandbox.spy(gardenerCore.projects, 'syncList')
+        syncControllerregistrationsSpy = sandbox.spy(gardenerCore.controllerregistrations, 'syncList')
       })
 
       it('should syncronize the cache', async function () {
@@ -131,6 +147,7 @@ describe('cache', function () {
         expect(syncQuotasSpy).to.be.calledOnce
         expect(syncSeedsSpy).to.be.calledOnce
         expect(syncProjectsSpy).to.be.calledOnce
+        expect(syncControllerregistrationsSpy).to.be.calledOnce
         expect(cache.synchronizationPromise).to.be.instanceof(Promise)
         expect(orderBy(cache.getCloudProfiles(), 'metadata.uid')).to.eql([a, c])
         expect(orderBy(cache.getQuotas(), 'metadata.uid')).to.eql([a, b, c])

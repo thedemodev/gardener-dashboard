@@ -48,6 +48,7 @@ import {
   generateWorker
 } from '@/utils'
 import { isUserError, errorCodesFromArray } from '@/utils/errorCodes'
+import { find } from 'lodash'
 
 const uriPattern = /^([^:/?#]+:)?(\/\/[^/?#]*)?([^?#]*)(\?[^#]*)?(#.*)?/
 
@@ -229,6 +230,9 @@ const actions = {
       }
     }
     set(shootResource, 'spec.region', region)
+
+    const networkingType = head(rootGetters.networkingTypeList)
+    set(shootResource, 'spec.networking.type', networkingType)
 
     const loadBalancerProviderName = head(rootGetters.loadBalancerProviderNamesByCloudProfileNameAndRegion({ cloudProfileName, region }))
     if (!isEmpty(loadBalancerProviderName)) {
