@@ -130,7 +130,7 @@ describe('cache', function () {
       let syncQuotasSpy
       let syncSeedsSpy
       let syncProjectsSpy
-      let syncControllerregistrationsSpy
+      let syncControllerRegistrationsSpy
 
       beforeEach(function () {
         syncCloudprofilesSpy = sandbox.spy(gardenerCore.cloudprofiles, 'syncList')
