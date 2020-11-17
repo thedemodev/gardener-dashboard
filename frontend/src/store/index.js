@@ -957,7 +957,7 @@ const actions = {
   },
   fetchControllerRegistrations ({ dispatch }) {
     try {
-      return dispatch('controllerRegistrations/getAll')
+      await dispatch('controllerRegistrations/getAll')
     } catch (err) {
       dispatch('setError', err)
     }

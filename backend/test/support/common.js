@@ -131,7 +131,7 @@ const quotaList = [
   getQuota({ name: 'foo-quota2', namespace: 'garden-foo' })
 ]
 
-const controllerregistrationsList = [
+const controllerRegistrationList = [
   {
     metadata: {
       name: 'foo'
@@ -185,7 +185,7 @@ const stub = {
   },
   getControllerRegistrations (sandbox) {
     const getControllerRegistrationsStub = sandbox.stub(cache, 'getControllerRegistrations')
-    getControllerRegistrationsStub.returns(controllerregistrationsList)
+    getControllerRegistrationsStub.returns(controllerRegistrationList)
   }
 }
 
