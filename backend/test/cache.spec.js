@@ -130,7 +130,7 @@ describe('cache', function () {
       let syncQuotasSpy
       let syncSeedsSpy
       let syncProjectsSpy
-      let syncControllerRegistrationsSpy
+      let syncControllerregistrationsSpy
 
       beforeEach(function () {
         syncCloudprofilesSpy = sandbox.spy(gardenerCore.cloudprofiles, 'syncList')
@@ -147,7 +147,7 @@ describe('cache', function () {
         expect(syncQuotasSpy).to.be.calledOnce
         expect(syncSeedsSpy).to.be.calledOnce
         expect(syncProjectsSpy).to.be.calledOnce
-        expect(syncControllerRegistrationsSpy).to.be.calledOnce
+        expect(syncControllerregistrationsSpy).to.be.calledOnce
         expect(cache.synchronizationPromise).to.be.instanceof(Promise)
         expect(orderBy(cache.getCloudProfiles(), 'metadata.uid')).to.eql([a, c])
         expect(orderBy(cache.getQuotas(), 'metadata.uid')).to.eql([a, b, c])

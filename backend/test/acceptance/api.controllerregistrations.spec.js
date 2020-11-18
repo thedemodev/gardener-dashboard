@@ -16,7 +16,10 @@ module.exports = function ({ agent, sandbox, auth, k8s }) {
   const user = auth.createUser({ id })
 
   it('should return all controller registrations', async function () {
+    const bearer = await user.bearer
+
     common.stub.getControllerRegistrations(sandbox)
+    k8s.stub.getControllerRegistrations({ bearer, verb: 'list' })
 
     const res = await agent
       .get('/api/controllerregistrations')
@@ -25,7 +28,6 @@ module.exports = function ({ agent, sandbox, auth, k8s }) {
     expect(res).to.have.status(200)
     expect(res).to.be.json
     expect(res.body).to.have.length(2)
-    expect(res.body[0].name).eql('foo')
-    expect(res.body[0].version).eql('v1.0.0')
+    expect(res.body[0]).to.include({ name: 'foo', version: 'v1.0.0' })
   })
 }

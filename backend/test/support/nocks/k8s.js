@@ -356,6 +356,21 @@ function canGetOpenAPI (scope) {
     })
 }
 
+function canListControllerRegistrations (scope, { allowed = true } = {}) {
+  return scope
+    .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews', body => {
+      const { namespace, verb, resource, group } = body.spec.resourceAttributes
+      return !namespace && group === 'core.gardener.cloud' && resource === 'controllerregistrations' && verb === 'list'
+    })
+    .reply(200, function (body) {
+      return _.assign({
+        status: {
+          allowed
+        }
+      }, body)
+    })
+}
+
 function getKubeconfigSecret (scope, { namespace, name, server }) {
   const url = new URL(server)
   const secret = {
@@ -992,6 +1007,11 @@ const stub = {
   getCloudProfiles ({ bearer, verb = 'get' }) {
     const scope = nockWithAuthorization(bearer)
     canGetCloudProfiles(scope, { verb })
+    return scope
+  },
+  getControllerRegistrations ({ bearer }) {
+    const scope = nockWithAuthorization(bearer)
+    canListControllerRegistrations(scope)
     return scope
   },
   getSeeds ({ bearer }) {
